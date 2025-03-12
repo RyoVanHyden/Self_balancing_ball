@@ -96,11 +96,11 @@ float Controller::computeOutput(float input){
     float i = 0.0;
     float d = 0.0;
 
-    if (P) p = input*Kc;
+    if (P) p = input;
     if (I) i = integral.computeOutput(input);
     if (D) d = derivative.computeOutput(input);
 
-    float output = p + i + d;
+    float output = Kc * (p + Td*d + (1/Ti)*i);
 
     //Anti-windup
     if (output > upper_limit) {

@@ -8,20 +8,27 @@
 
 Adafruit_VL53L0X lox = Adafruit_VL53L0X();
 float distance[] = {0.0, 0.0, 0.0, 0.0};
-float dist_input;
+
 int dist_index = 0;
 
 float distance_sampling_time = 15;
 float control_sampling_time = 60;
 
-float Kc = 0.83;
-float Td = 2.23;
-
 float last_distance_sample, last_control_sample;
 
 float now;
 
-float servo_angle;
+//Control Variables =================================================
+
+float Kc = 2.2327;
+float Td = 0.3701;
+
+float distance_INPUT;
+float servo_angle_OUTPUT;
+
+float distance_REF = 10.0;
+float distance_ERROR = 0.0;
+
 
 Controller controller("servo angle controller", true, false, true);
 
@@ -58,11 +65,12 @@ void loop() {
 
   //MAIN CONTROL LOOP
   if (now - last_control_sample > control_sampling_time){
-    dist_input = takeDistanceAverage();
 
-    servo_angle = controller.computeOutput(dist_input);    
+    distance_INPUT = takeDistanceAverage();
+    distance_ERROR = distance_REF - distance_INPUT;
+    servo_angle_OUTPUT = controller.computeOutput(distance_ERROR);    
 
-    //write servo_angle on the servo motor (...)
+    //write servo_angle_OUTPUT on the servo motor (...)
 
     last_control_sample = now;
   }
