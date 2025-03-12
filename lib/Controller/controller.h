@@ -10,7 +10,7 @@ private:
     float lower_limit, upper_limit;
 
 public:
-    Controller(String name, bool P, bool I, bool D);
+    Controller(String name, bool P, bool I, bool D, float upper_limit, float lower_limit);
     String name;
 
     void setProportional(float Kc);

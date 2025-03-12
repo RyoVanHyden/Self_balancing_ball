@@ -62,7 +62,7 @@ void Derivative::resetDerivative(){
 
 // Controller ----------------------------------------------------------
 
-Controller::Controller(String name, bool P, bool I, bool D){
+Controller::Controller(String name, bool P, bool I, bool D, float upper_limit, float lower_limit){
     this->name = name;
     this->P = P;
     this->I = I;
@@ -72,6 +72,8 @@ Controller::Controller(String name, bool P, bool I, bool D){
     this->Kc = 0;
     this->Ti = 0;
     this->Td = 0;
+    this->upper_limit = upper_limit;
+    this->lower_limit = lower_limit;
 }
 
 void Controller::setProportional(float Kc){
@@ -111,5 +113,5 @@ float Controller::computeOutput(float input){
         if (I) integral.updateSum();
     }
 
-    return (p + i + d);
+    return (output);
 }
