@@ -7,14 +7,15 @@ private:
     Derivative derivative;
     Integral integral;
     float Kc, Ti, Td;
+    float lower_limit, upper_limit;
 
 public:
     Controller(String name, bool P, bool I, bool D);
     String name;
 
-    void setPGain(float Kc);
-    void setIGain(float Ti);
-    void setDGain(float Td);
+    void setProportional(float Kc);
+    void setIntegral(float Ti);
+    void setDerivative(float Td);
     
     float computeOutput(float input);
     void resetController();
@@ -24,16 +25,17 @@ public:
 class Integral{
     
 private:
-    float step_size, upper_limit, lower_limit;
+    float step_size;
     float sum, output;   
 
 
 public:
     String name;
-    Integral(float step_size, float upper_limit, float lower_limit, String name);
+    Integral(float step_size, String name);
     Integral();
     float computeOutput(float input);
-    void setLimits(float upper_limit, float lower_limit);
+    void updateSum();
+    void resetSum();
 
 };
 
@@ -49,5 +51,6 @@ public:
     Derivative();
     float computeOutput(float input);
     void setStepSize(float step_size);
+    void resetDerivative();
 
 };
