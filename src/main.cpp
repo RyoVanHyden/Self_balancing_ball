@@ -30,7 +30,7 @@ float distance_REF = 10.0;
 float distance_ERROR = 0.0;
 
 
-Controller controller("servo angle controller", true, false, true);
+Controller controller("servo angle controller", true, false, true, ANGLE_MAX, ANGLE_MIN, control_sampling_time);
 
 void setup() {
   
