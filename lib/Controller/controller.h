@@ -8,9 +8,10 @@ private:
     Integral integral;
     float Kc, Ti, Td;
     float lower_limit, upper_limit;
+    float sample_time;
 
 public:
-    Controller(String name, bool P, bool I, bool D, float upper_limit, float lower_limit);
+    Controller(String name, bool P, bool I, bool D, float upper_limit, float lower_limit, float sample_time);
     String name;
 
     void setProportional(float Kc);

@@ -62,18 +62,19 @@ void Derivative::resetDerivative(){
 
 // Controller ----------------------------------------------------------
 
-Controller::Controller(String name, bool P, bool I, bool D, float upper_limit, float lower_limit){
+Controller::Controller(String name, bool P, bool I, bool D, float upper_limit, float lower_limit, float sample_time){
     this->name = name;
     this->P = P;
     this->I = I;
     this->D = D;
-    this->integral = Integral(0,"integral");
-    this->derivative = Derivative(0,"derivative");
+    this->integral = Integral(sample_time,"integral");
+    this->derivative = Derivative(sample_time,"derivative");
     this->Kc = 0;
     this->Ti = 0;
     this->Td = 0;
     this->upper_limit = upper_limit;
     this->lower_limit = lower_limit;
+    this->sample_time = sample_time;
 }
 
 void Controller::setProportional(float Kc){
