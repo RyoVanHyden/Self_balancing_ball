@@ -29,6 +29,16 @@ const int MPU = 0x68;
 int16_t ax, ay, az, gx, gy, gz;
 float accelX, accelY, accelZ, roll, pitch;
 
+//Angle testing ------------
+float servo_angles[180];
+float measured_angles[180];
+int test_index = 0;
+float avg_angle = 0.0;
+bool done = false;
+float last_test_time = 0;
+float test_interval = 333;
+//--------------------------
+
 int dist_index = 0;
 
 float distance_sampling_time = 15;
@@ -106,6 +116,15 @@ void setup() {
   Serial.begin(115200);
   mpu.initialize();
   Wire.begin();
+
+  for (int i = 0; i<180; i++) {
+    servo_angles[i] = i/1.0;
+    measured_angles[i] = 0.0;
+  }
+  test_index = 0;
+  avg_angle = 0.0;
+  pitch = 0.0;
+
 }
 
 void readIMU(){
@@ -128,10 +147,38 @@ void readIMU(){
 }
 
 void loop() {
-  
-  readIMU();
-  Serial.println("Roll: " + String(roll) + " Pitch: " + String(pitch));
-  delay(500); // Wait before scanning again 
+    
+  now = millis();
+  if ((now - last_test_time > test_interval) && (test_index < 180)){
+
+    //Write servo angle on the servo motor and wait for its stabilization
+    servoCont.moveWithTime(1, servo_angles[test_index], 60);
+    delay(100);
+
+    //Measure pitch angle (take average)
+    avg_angle = 0.0;
+    for (int i = 0; i<5; i++){
+      readIMU();
+      avg_angle += pitch;
+      if (i!=4) delay(20);
+    }
+    pitch = avg_angle/5.0;
+
+    //Store measured angle
+    measured_angles[test_index] = pitch;
+    Serial.println("[i = " + String(test_index) + "]: Servo angle = " + String(servo_angles[test_index]) + "; Measured Angle = " + String(pitch));
+    
+    test_index++;
+
+    last_test_time = now;
+  }
+
+  if ((test_index == 180) && !done){
+    done = true;
+    for (int i = 0; i<180;i++){
+      Serial.println(String(servo_angles[i]) + ", " + String(measured_angles[i]));
+    }
+  }
 
 }
 
