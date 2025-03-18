@@ -1,27 +1,5 @@
 #include <WString.h>
-class Controller {
 
-private:
-    
-    bool P, I, D;
-    Derivative derivative;
-    Integral integral;
-    float Kc, Ti, Td;
-    float lower_limit, upper_limit;
-    float sample_time;
-
-public:
-    Controller(String name, bool P, bool I, bool D, float upper_limit, float lower_limit, float sample_time);
-    String name;
-
-    void setProportional(float Kc);
-    void setIntegral(float Ti);
-    void setDerivative(float Td);
-    
-    float computeOutput(float input);
-    void resetController();
-
-};
 
 class Integral{
     
@@ -55,3 +33,27 @@ public:
     void resetDerivative();
 
 };
+
+class Controller {
+
+    private:
+        
+        bool P, I, D;
+        Derivative derivative;
+        Integral integral;
+        float Kc, Ti, Td;
+        float lower_limit, upper_limit;
+        float sample_time;
+    
+    public:
+        Controller(String name, bool P, bool I, bool D, float upper_limit, float lower_limit, float sample_time);
+        String name;
+    
+        void setProportional(float Kc);
+        void setIntegral(float Ti);
+        void setDerivative(float Td);
+        
+        float computeOutput(float input);
+        void resetController();
+    
+    };
