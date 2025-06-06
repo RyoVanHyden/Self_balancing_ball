@@ -4,11 +4,12 @@
 class Integral{
     
 private:
-    float step_size;
-    float sum, output;   
+    //float step_size;
+    //float sum, output;   
 
 
 public:
+    float step_size, sum, output;
     String name;
     Integral(float step_size, String name);
     Integral();
@@ -21,10 +22,11 @@ public:
 class Derivative{
 
 private:
-    float step_size, last_input;
-    float output;
+    //float step_size, last_input;
+    //float output;
 
 public:
+    float step_size, last_input, output;
     String name;
     Derivative(float step_size, String name);
     Derivative();
@@ -38,14 +40,24 @@ class Controller {
 
     private:
         
+    /*
         bool P, I, D;
         Derivative derivative;
         Integral integral;
         float Kc, Ti, Td;
         float lower_limit, upper_limit;
         float sample_time;
-    
+    */
+   
     public:
+
+        bool P, I, D;
+        Derivative derivative;
+        Integral integral;
+        float Kc, Ti, Td;
+        float lower_limit, upper_limit;
+        float sample_time;
+
         Controller(String name, bool P, bool I, bool D, float upper_limit, float lower_limit, float sample_time);
         String name;
     
@@ -54,6 +66,6 @@ class Controller {
         void setDerivative(float Td);
         
         float computeOutput(float input);
-        void resetController();
+        void  resetController();
     
     };

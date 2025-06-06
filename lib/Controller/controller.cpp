@@ -1,4 +1,6 @@
 #include "controller.h"
+#include <WString.h>
+#include <HardwareSerial.h>
 
 // Integral ------------------------------------------------------------
 
@@ -67,14 +69,14 @@ Controller::Controller(String name, bool P, bool I, bool D, float upper_limit, f
     this->P = P;
     this->I = I;
     this->D = D;
-    this->integral = Integral(sample_time,"integral");
-    this->derivative = Derivative(sample_time,"derivative");
-    this->Kc = 0;
-    this->Ti = 0;
-    this->Td = 0;
+    this->sample_time = sample_time/1000.0;
+    this->integral = Integral(sample_time/1000.0,"integral");
+    this->derivative = Derivative(sample_time/1000.0,"derivative");
+    this->Kc = 0.0;
+    this->Ti = 0.0;
+    this->Td = 0.0;
     this->upper_limit = upper_limit;
     this->lower_limit = lower_limit;
-    this->sample_time = sample_time;
 }
 
 void Controller::setProportional(float Kc){
@@ -100,10 +102,18 @@ float Controller::computeOutput(float input){
     float d = 0.0;
 
     if (P) p = input;
-    if (I) i = integral.computeOutput(input);
-    if (D) d = derivative.computeOutput(input);
+    if (I) {
+        i = integral.computeOutput(input);
+        Serial.println("Integral sum = " + String(i));
+    } else Ti = 1.0;
+    if (D)  {
+        d = derivative.computeOutput(input);
+        Serial.println("Derivative sum = " + String(d));
+    }
 
     float output = Kc * (p + Td*d + (1/Ti)*i);
+
+    Serial.println("Output = " + String(output));
 
     //Anti-windup
     if (output > upper_limit) {
@@ -113,6 +123,8 @@ float Controller::computeOutput(float input){
     } else {
         if (I) integral.updateSum();
     }
+
+    Serial.println("Output (Antiwindup)= " + String(output));
 
     return (output);
 }
